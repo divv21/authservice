@@ -1,0 +1,35 @@
+package com.expensetracker.authservice.service;
+
+import com.expensetracker.authservice.entities.UserInfo;
+import com.expensetracker.authservice.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+
+@Component
+@AllArgsConstructor
+@Data
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Autowired
+    private final UserRepository userRepository;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException{
+
+        UserInfo user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new UsernameNotFoundException("Could not find user.");
+        }
+        return new CustomUserDetails(user);
+    }
+}
