@@ -1,6 +1,8 @@
 package com.expensetracker.authservice.service;
 
 import com.expensetracker.authservice.entities.UserInfo;
+import com.expensetracker.authservice.eventProducer.UserInfoEvent;
+import com.expensetracker.authservice.eventProducer.UserInfoProducer;
 import com.expensetracker.authservice.model.UserInfoDTO;
 import com.expensetracker.authservice.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
+
     @Override
     public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException{
 
@@ -52,6 +57,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserInfo userInfo = new UserInfo(userId, userInfoDto.getUsername(),
                 userInfoDto.getPassword(), new HashSet<>());
         userRepository.save(userInfo);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto, userId));
         return true;
+    }
+
+    private UserInfoEvent userInfoEventToPublish(UserInfoDTO userInfoDto, String userId) {
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getUsername())
+                .lastName(userInfoDto.getLastName())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber()).build();
     }
 }
