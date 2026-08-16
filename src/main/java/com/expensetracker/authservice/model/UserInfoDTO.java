@@ -14,10 +14,8 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserInfoDTO extends UserInfo {
 
-    @NonNull
     private String firstName;
 
-    @NonNull
     private String lastName;
 
     private Long phoneNumber;
