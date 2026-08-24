@@ -1,6 +1,7 @@
 package com.expensetracker.authservice.serializer;
 
 import com.expensetracker.authservice.eventProducer.UserInfoEvent;
+import com.expensetracker.authservice.model.UserInfoDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serializer;
 
