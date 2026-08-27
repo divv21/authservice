@@ -62,8 +62,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userId;
     }
 
-    public String getUserByUsername(String userName){
-        return Optional.of(userRepository.findByUsername(userName)).map(UserInfo::getUserId).orElse(null);
+    public String getUserByUsername(String userName) {
+        return Optional.ofNullable(userRepository.findByUsername(userName))
+                .map(UserInfo::getUserId)
+                .orElse(null);
     }
 
     private UserInfoEvent userInfoEventToPublish(UserInfoDTO userInfoDto, String userId) {

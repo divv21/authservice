@@ -2,6 +2,8 @@ package com.expensetracker.authservice.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.time.Instant;
 
@@ -10,6 +12,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Table(name = "tokens")
 public class RefreshToken {
 
